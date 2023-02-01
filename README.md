@@ -30,7 +30,7 @@ Successor of the [PDF Annotation Extractor for Alfred](https://github.com/chrisg
   ```
 
 - [Download the app](https://github.com/chrisgrieser/pdf-annotation-extractor/tree/main/PDF%20Annotation%20Extractor.app).
-- Open a PDF with it.
+- Open a PDF with it. On the first run, the app will open a text file containing the settings required.
 
 ## Usage
 
