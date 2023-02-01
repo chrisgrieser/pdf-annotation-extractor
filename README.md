@@ -4,6 +4,9 @@ Automatically determines correct page numbers, merges highlights across page bre
 
 Successor of the [PDF Annotation Extractor for Alfred](https://github.com/chrisgrieser/pdf-annotation-extractor-alfred), this app works without Alfred.
 
+> __Note__  
+> Please note that this app is still beta.
+
 ## Table of Contents
 <!--toc:start-->
 - [Installation](#installation)
