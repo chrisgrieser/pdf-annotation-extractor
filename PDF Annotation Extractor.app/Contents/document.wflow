@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>AMApplicationBuild</key>
+	<string>520</string>
+	<key>AMApplicationVersion</key>
+	<string>2.10</string>
+	<key>AMDocumentVersion</key>
+	<string>2</string>
+	<key>actions</key>
+	<array>
+		<dict>
+			<key>action</key>
+			<dict>
+				<key>AMAccepts</key>
+				<dict>
+					<key>Container</key>
+					<string>List</string>
+					<key>Optional</key>
+					<true/>
+					<key>Types</key>
+					<array>
+						<string>com.apple.cocoa.string</string>
+					</array>
+				</dict>
+				<key>AMActionVersion</key>
+				<string>2.0.3</string>
+				<key>AMApplication</key>
+				<array>
+					<string>Automator</string>
+				</array>
+				<key>AMParameterProperties</key>
+				<dict>
+					<key>COMMAND_STRING</key>
+					<dict/>
+					<key>CheckedForUserDefaultShell</key>
+					<dict/>
+					<key>inputMethod</key>
+					<dict/>
+					<key>shell</key>
+					<dict/>
+					<key>source</key>
+					<dict/>
+				</dict>
+				<key>AMProvides</key>
+				<dict>
+					<key>Container</key>
+					<string>List</string>
+					<key>Types</key>
+					<array>
+						<string>com.apple.cocoa.string</string>
+					</array>
+				</dict>
+				<key>ActionBundlePath</key>
+				<string>/System/Library/Automator/Run Shell Script.action</string>
+				<key>ActionName</key>
+				<string>Run Shell Script</string>
+				<key>ActionParameters</key>
+				<dict>
+					<key>COMMAND_STRING</key>
+					<string>#!/bin/zsh
+# shellcheck disable=2164
+export PATH=/usr/local/lib:/usr/local/bin:/opt/homebrew/bin/:$PATH
+
+#───────────────────────────────────────────────────────────────────────────────
+# READ SETTINGS
+
+default_settings=$(cat &lt;&lt;EOF
+bibtex_library_path="~/Documents/library.bib"
+
+# If path is in Obsidian vault, will open the note in Obsidian afterwards
+output_path="~/Desktop"
+
+# pdfannots2json or pdfannots. Should normally stay "pdfannots2json"
+extraction_engine="pdfannots2json"
+EOF
+)
+settings_folder="$HOME/.config/pdf-annotation-extractor"
+settings_file="$settings_folder/pdf-annotation-extractor-config"
+
+if [[ ! -e "$settings_file" ]]; then
+	mkdir -p "$settings_folder"
+	echo "$default_settings" &gt; "$settings_file"
+	open "$settings_file"
+	osascript -e 'display alert "Enter your settings, save the file, and then run the extraction again."'
+	exit 0
+fi
+settings=$(grep -v -e "^#" &lt; "$settings_file") # remove comments
+
+bibtex_library_path=$(echo "$settings" | grep "bibtex_library_path" | cut -d "=" -f2 | tr -d '"')
+bibtex_library_path="${bibtex_library_path/#\~/$HOME}"
+output_path=$(echo "$settings" | grep "output_path" | cut -d "=" -f2 | tr -d '"')
+output_path="${output_path/#\~/$HOME}"
+extraction_engine=$(echo "$settings" | grep "extraction_engine" | cut -d "=" -f2 | tr -d '"')
+
+#───────────────────────────────────────────────────────────────────────────────
+# Input
+# pdf_path=$(osascript "./scripts/get-pdf-path.applescript")
+pdf_path="$1"
+
+#───────────────────────────────────────────────────────────────────────────────
+# GUARD CLAUSES &amp; RETRIEVE CITEKEY
+
+function errorMsg() {
+	osascript -e "display alert \"$1\" as critical"
+}
+
+if [[ ! -f "$bibtex_library_path" ]]; then
+	errorMsg "Library file does not exist."
+	exit 1
+fi
+
+if [[ ! "$pdf_path" == *.pdf ]]; then
+	errorMsg "Not a .pdf file."
+	exit 1
+fi
+
+citekey=$(basename "$pdf_path" .pdf | sed -E 's/_.*//')
+entry=$(grep --after-context=20 --max-count=1 --ignore-case "{$citekey," "$bibtex_library_path")
+if [[ -z "$entry" ]]; then
+	errorMsg "No entry with the citekey $citekey found in library file."
+	exit 1
+fi
+
+if [[ "$extraction_engine" == "pdfannots" ]] &amp;&amp; ! command -v pdfannots &amp;&gt;/dev/null; then
+	errorMsg "pdfannots not installed."
+	exit 1
+elif [[ "$extraction_engine" == "pdfannots2json" ]] &amp;&amp; ! command -v pdfannots2json &amp;&gt;/dev/null; then
+	errorMsg "pdfannots2json not installed."
+	exit 1
+fi
+
+#───────────────────────────────────────────────────────────────────────────────
+# EXTRACTION
+osascript -e 'display notification "⏳ Running Extraction…" with title "Annotation Extractor"'
+
+if [[ "$extraction_engine" == "pdfannots" ]]; then
+	annotations=$(pdfannots --no-group --format=json "$pdf_path")
+else
+	wd="$PWD"
+	IMAGE_FOLDER="${output_path/#\~/$HOME}/attachments/image_temp"
+	mkdir -p "$IMAGE_FOLDER" &amp;&amp; cd "$IMAGE_FOLDER"
+
+	annotations=$(pdfannots2json "$pdf_path" --image-output-path=./ --image-format="png")
+
+	# IMAGE EXTRACTION
+	# shellcheck disable=SC2012
+	NUMBER_OF_IMAGES=$(ls | wc -l | tr -d " ")
+	[[ $NUMBER_OF_IMAGES -eq 0 ]] &amp;&amp; exit 0 # abort if no images
+
+	# HACK: fix zero-padding for low page numbers by giving all images 4 digits
+	# see https://github.com/mgmeyers/pdfannots2json/issues/16
+	for image in *; do
+		leftPadded=$(echo "$image" | sed -E 's/-([[:digit:]])-/-000\1-/' | sed -E 's/-([[:digit:]][[:digit:]])-/-00\1-/' | sed -E 's/-([[:digit:]][[:digit:]][[:digit:]])-/-0\1-/')
+		mv "$image" "$leftPadded"
+	done
+
+	# rename for workflow
+	i=1
+	for image in *; do
+		mv -f "$image" ../"${citekey}_image${i}.png"
+		i=$((i + 1))
+	done
+
+	rmdir "$IMAGE_FOLDER" # remove temp folder
+	cd "$wd"
+fi
+
+#───────────────────────────────────────────────────────────────────────────────
+
+# PROCESS ANNOTATIONS
+JS_script_path="/Applications/PDF Annotation Extractor.app/Contents/process_annotations.js"
+osascript -l JavaScript "$JS_script_path" "$citekey" "$annotations" "$entry" "$output_path" "$extraction_engine"
+</string>
+					<key>CheckedForUserDefaultShell</key>
+					<true/>
+					<key>inputMethod</key>
+					<integer>1</integer>
+					<key>shell</key>
+					<string>/bin/zsh</string>
+					<key>source</key>
+					<string></string>
+				</dict>
+				<key>BundleIdentifier</key>
+				<string>com.apple.RunShellScript</string>
+				<key>CFBundleVersion</key>
+				<string>2.0.3</string>
+				<key>CanShowSelectedItemsWhenRun</key>
+				<false/>
+				<key>CanShowWhenRun</key>
+				<true/>
+				<key>Category</key>
+				<array>
+					<string>AMCategoryUtilities</string>
+				</array>
+				<key>Class Name</key>
+				<string>RunShellScriptAction</string>
+				<key>InputUUID</key>
+				<string>ABABBC42-3F84-4DD7-94D1-3EB239E38FDD</string>
+				<key>Keywords</key>
+				<array>
+					<string>Shell</string>
+					<string>Script</string>
+					<string>Command</string>
+					<string>Run</string>
+					<string>Unix</string>
+				</array>
+				<key>OutputUUID</key>
+				<string>5F8FEDFF-8BCC-458A-B4FC-2547616DCA2C</string>
+				<key>ShowWhenRun</key>
+				<false/>
+				<key>UUID</key>
+				<string>7775F822-8D29-44C1-8722-F01561C6FEF4</string>
+				<key>UnlocalizedApplications</key>
+				<array>
+					<string>Automator</string>
+				</array>
+				<key>arguments</key>
+				<dict>
+					<key>0</key>
+					<dict>
+						<key>default value</key>
+						<integer>0</integer>
+						<key>name</key>
+						<string>inputMethod</string>
+						<key>required</key>
+						<string>0</string>
+						<key>type</key>
+						<string>0</string>
+						<key>uuid</key>
+						<string>0</string>
+					</dict>
+					<key>1</key>
+					<dict>
+						<key>default value</key>
+						<false/>
+						<key>name</key>
+						<string>CheckedForUserDefaultShell</string>
+						<key>required</key>
+						<string>0</string>
+						<key>type</key>
+						<string>0</string>
+						<key>uuid</key>
+						<string>1</string>
+					</dict>
+					<key>2</key>
+					<dict>
+						<key>default value</key>
+						<string></string>
+						<key>name</key>
+						<string>source</string>
+						<key>required</key>
+						<string>0</string>
+						<key>type</key>
+						<string>0</string>
+						<key>uuid</key>
+						<string>2</string>
+					</dict>
+					<key>3</key>
+					<dict>
+						<key>default value</key>
+						<string></string>
+						<key>name</key>
+						<string>COMMAND_STRING</string>
+						<key>required</key>
+						<string>0</string>
+						<key>type</key>
+						<string>0</string>
+						<key>uuid</key>
+						<string>3</string>
+					</dict>
+					<key>4</key>
+					<dict>
+						<key>default value</key>
+						<string>/bin/sh</string>
+						<key>name</key>
+						<string>shell</string>
+						<key>required</key>
+						<string>0</string>
+						<key>type</key>
+						<string>0</string>
+						<key>uuid</key>
+						<string>4</string>
+					</dict>
+				</dict>
+				<key>isViewVisible</key>
+				<integer>1</integer>
+				<key>location</key>
+				<string>591.000000:252.000000</string>
+				<key>nibPath</key>
+				<string>/System/Library/Automator/Run Shell Script.action/Contents/Resources/Base.lproj/main.nib</string>
+			</dict>
+			<key>isViewVisible</key>
+			<integer>1</integer>
+		</dict>
+	</array>
+	<key>connectors</key>
+	<dict/>
+	<key>workflowMetaData</key>
+	<dict>
+		<key>workflowTypeIdentifier</key>
+		<string>com.apple.Automator.application</string>
+	</dict>
+</dict>
+</plist>
