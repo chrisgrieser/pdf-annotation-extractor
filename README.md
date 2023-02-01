@@ -1,9 +1,9 @@
 # PDF Annotation Extractor
-![](https://img.shields.io/github/downloads/chrisgrieser/pdf-annotation-extractor-alfred/total?label=Total%20Downloads&style=plastic) ![](https://img.shields.io/github/v/release/chrisgrieser/pdf-annotation-extractor-alfred?label=Latest%20Release&style=plastic)
-
-An [Alfred Workflow](https://www.alfredapp.com/) to extract annotations as Markdown & insert Pandoc Citations as References.
+![](https://img.shields.io/github/downloads/chrisgrieser/pdf-annotation-extractor/total?label=Total%20Downloads&style=plastic) ![](https://img.shields.io/github/v/release/chrisgrieser/pdf-annotation-extractor?label=Latest%20Release&style=plastic)
 
 Automatically determines correct page numbers, merges highlights across page breaks, prepends a YAML Header bibliographic information, and some more small Quality-of-Life conveniences.
+
+Successor of the [PDF Annotation Extractor for Alfred](https://github.com/chrisgrieser/pdf-annotation-extractor-alfred), this App works without Alfred.
 
 ## Table of Contents
 <!--toc:start-->
@@ -22,7 +22,6 @@ Automatically determines correct page numbers, merges highlights across page bre
 <!--toc:end-->
 
 ## Installation
-- Requirement: [Alfred 5](https://www.alfredapp.com/) with Powerpack
 - Install [Homebrew](https://brew.sh/)
 - Install `pdfannots2json` by pasting the following into your terminal:
 
@@ -30,9 +29,8 @@ Automatically determines correct page numbers, merges highlights across page bre
   brew install mgmeyers/pdfannots2json/pdfannots2json
   ```
 
-- Download the [latest release](https://github.com/chrisgrieser/pdf-annotation-extractor-alfred/releases/latest/).
-- Set the hotkey by double-clicking the sky-blue field at the top left. 
-- Set up the workflow configuration inside the app.
+- [Download the app](https://github.com/chrisgrieser/pdf-annotation-extractor/tree/main/PDF%20Annotation%20Extractor.app).
+- Open a PDF with it.
 
 ## Usage
 
