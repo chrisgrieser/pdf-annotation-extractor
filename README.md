@@ -1,5 +1,4 @@
 # PDF Annotation Extractor
-<!-- ![](https://img.shields.io/github/downloads/chrisgrieser/pdf-annotation-extractor/total?label=Total%20Downloads&style=plastic) -->
 
 Automatically determines correct page numbers, merges highlights across page breaks, prepends a YAML Header bibliographic information, and some more small Quality-of-Life conveniences.
 
@@ -29,8 +28,8 @@ Successor of the [PDF Annotation Extractor for Alfred](https://github.com/chrisg
   brew install mgmeyers/pdfannots2json/pdfannots2json
   ```
 
-- [Download the app](https://github.com/chrisgrieser/pdf-annotation-extractor/tree/main/PDF%20Annotation%20Extractor.app).
-- Open a PDF with it. On the first run, the app will open a text file containing the settings required.
+- [Download the app](https://github.com/chrisgrieser/pdf-annotation-extractor/tree/main/PDF%20Annotation%20Extractor.app) and put it into you Applications folder.
+- Open a PDF with it. On the first run, the app opens a text file containing the settings required.
 
 ## Usage
 
@@ -78,7 +77,7 @@ Insert these special codes at the __beginning__ of an annotation to invoke speci
 - There are some cases where the extracted text is all jumbled up. In that case, it's a is a problem with the upstream `pdfannots2json`. [The issue is tracked here](https://github.com/mgmeyers/pdfannots2json/issues/11), and you can also report your problem.
 
 > __Note__  
-> As a fallback, you can use `pdfannots` as extraction engine, as a different PDF engine sometimes fixes issues. This requires installing [pdfannots](https://github.com/mgmeyers/pdfannots2json/issues/11) via `pip3 install pdfannots`. Note that `pdfannots` does not support image extraction or extracting only recent annotations, so generally you want to keep using `pdfannots2json`.
+> As a fallback, you can use `pdfannots` as extraction engine, as a different PDF engine sometimes fixes issues. This requires installing [pdfannots](https://github.com/mgmeyers/pdfannots2json/issues/11) via `pip3 install pdfannots`. Note that `pdfannots` does not support image extraction or extracting only recent annotations, so normally you want to keep using `pdfannots2json`.
 
 ## Credits
 
@@ -87,7 +86,6 @@ Insert these special codes at the __beginning__ of an annotation to invoke speci
 - Thanks to [Andrew Baumann for pdfannots](https://github.com/0xabu/pdfannots), which caused me to develop this workflow (even though it does not use `pdfannots` anymore).
 - Also many thanks to [@mgmeyers for pdfannots2json](https://github.com/mgmeyers/pdfannots2json/), which enabled many improvements to this workflow.
 - I also thank [@StPag](https://github.com/stefanopagliari/) for his ideas on annotation codes.
-- <a href="https://www.flaticon.com/authors/freepik">Icons created by Freepik/Flaticon.</a>
 
 ### About the Developer
 In my day job, I am a sociologist studying the social mechanisms underlying the digital economy. For my PhD project, I investigate the governance of the app economy and how software ecosystems manage the tension between innovation and compatibility. If you are interested in this subject, feel free to get in touch!
