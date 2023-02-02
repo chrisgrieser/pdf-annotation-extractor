@@ -37,7 +37,7 @@ Successor of the [PDF Annotation Extractor for Alfred](https://github.com/chrisg
   /bin/bash -c (curl -sL "https://raw.githubusercontent.com/chrisgrieser/pdf-annotation-extractor/main/install.sh")
   ```
 
-- Open a PDF with the app it. On the first run, the app opens a text file containing the settings required.
+- Open a PDF with the app. On the first run, the app opens a text file containing the settings required.
 
 ## Usage
 
