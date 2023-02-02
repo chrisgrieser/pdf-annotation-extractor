@@ -1,6 +1,15 @@
 # PDF Annotation Extractor
 
-Automatically determines correct page numbers, merges highlights across page breaks, prepends a YAML Header bibliographic information, and some more small Quality-of-Life conveniences.
+Automatically extract annotations from a PDF as markdown with various processing.
+
+## Features
+- inserts bibliographic metadata as YAML frontmatter
+- inserts pandoc citations with the correct page numbers instead of "PDF page 3"
+- merges highlights across pages
+- used just by opening a PDF file via the "Open With" menu
+- extract rectangles as images, puts those images into an `attachments` subfolder, and inserts markdown images (`![[citekey_image1.png]]`) into the markdown file.
+- If output path is in an Obsidian vault, automatically opens the file in Obsidian and copies the wikilink for the file to the clipboard
+- …
 
 Successor of the [PDF Annotation Extractor for Alfred](https://github.com/chrisgrieser/pdf-annotation-extractor-alfred), this app works without Alfred.
 
@@ -49,7 +58,7 @@ Successor of the [PDF Annotation Extractor for Alfred](https://github.com/chrisg
 > You can achieve such a filename pattern with automatic renaming rules of most reference managers, for example with the [ZotFile plugin for Zotero](http://zotfile.com/#renaming-rules) or the [AutoFile feature of BibDesk](https://bibdesk.sourceforge.io/manual/BibDeskHelp_77.html#SEC140).
 
 ### Basics
-Use the hotkey to trigger the Annotation Extraction on the PDF file currently selected in Finder.
+Open a PDF file with the Annotation Extractor via the "Open With" menu. That's it.
 
 __Annotation Types extracted__
 - Highlight ➡️ bullet point, quoting text and prepending the comment
