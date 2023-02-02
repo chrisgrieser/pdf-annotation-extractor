@@ -31,8 +31,13 @@ Successor of the [PDF Annotation Extractor for Alfred](https://github.com/chrisg
   brew install mgmeyers/pdfannots2json/pdfannots2json
   ```
 
-- [Download the app](https://github.com/chrisgrieser/pdf-annotation-extractor/blob/main/PDF%20Annotation%20Extractor.zip?raw=true), unzip it, and put it into you Applications folder.
-- Open a PDF with it. On the first run, the app opens a text file containing the settings required.
+- Run the following code in your terminal: 
+
+  ```bash
+  /bin/bash -c (curl -sL "https://raw.githubusercontent.com/chrisgrieser/pdf-annotation-extractor/main/install.sh")
+  ```
+
+- Open a PDF with the app it. On the first run, the app opens a text file containing the settings required.
 
 ## Usage
 
