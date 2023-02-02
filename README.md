@@ -1,5 +1,4 @@
 # PDF Annotation Extractor
-
 Automatically extract annotations from a PDF as markdown with various processing.
 
 ## Features
@@ -11,25 +10,26 @@ Automatically extract annotations from a PDF as markdown with various processing
 - If output path is in an Obsidian vault, automatically opens the file in Obsidian and copies the wikilink for the file to the clipboard
 - …
 
-Successor of the [PDF Annotation Extractor for Alfred](https://github.com/chrisgrieser/pdf-annotation-extractor-alfred), this app works without Alfred.
+This app is the successor of the [PDF Annotation Extractor for Alfred](https://github.com/chrisgrieser/pdf-annotation-extractor-alfred) and works now completely without Alfred.
 
 > __Note__  
 > Please note that this app is still beta.
 
 ## Table of Contents
 <!--toc:start-->
-- [Installation](#installation)
-- [Usage](#usage)
+  - [Features](#features)
+  - [Installation](#installation)
+  - [Usage](#usage)
 	- [Requirements for the PDF](#requirements-for-the-pdf)
 	- [Basics](#basics)
 	- [Automatic Page Number Identification](#automatic-page-number-identification)
 	- [Annotation Codes](#annotation-codes)
 	- [Extracting Images](#extracting-images)
-- [Troubleshooting](#troubleshooting)
-- [Credits](#credits)
-	- [Thanks](#thanks)
-	- [About the Developer](#about-the-developer)
-	- [Buy me a Coffee](#buy-me-a-coffee)
+  - [Troubleshooting](#troubleshooting)
+  - [Credits](#credits)
+    - [Thanks](#thanks)
+    - [About the Developer](#about-the-developer)
+    - [Buy me a Coffee](#buy-me-a-coffee)
 <!--toc:end-->
 
 ## Installation
