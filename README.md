@@ -13,7 +13,7 @@ Automatically extract annotations from a PDF as markdown with various processing
 This app is the successor of the [PDF Annotation Extractor for Alfred](https://github.com/chrisgrieser/pdf-annotation-extractor-alfred) and works now completely without Alfred.
 
 > __Note__  
-> Please note that this app is still beta.
+> Please note that this app is still in beta.
 
 ## Table of Contents
 <!--toc:start-->
