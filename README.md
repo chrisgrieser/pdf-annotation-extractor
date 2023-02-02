@@ -2,11 +2,11 @@
 Automatically extract annotations from a PDF as markdown with various processing.
 
 ## Features
+- used by simply opening a PDF file via the "Open With" menu
 - inserts bibliographic metadata as YAML frontmatter
 - inserts pandoc citations with the correct page numbers instead of "PDF page 3"
 - merges highlights across pages
-- used just by opening a PDF file via the "Open With" menu
-- extract rectangle annotations as images, puts those images into an `attachments` subfolder, and inserts markdown images (`![[citekey_image1.png]]`) into the markdown file.
+- extracts rectangle annotations as images, puts those images into an `attachments` subfolder, and inserts markdown images (`![[citekey_image1.png]]`) into the markdown file.
 - If output path is in an Obsidian vault, automatically opens the file in Obsidian and copies the wikilink for the file to the clipboard
 - …
 
