@@ -40,7 +40,8 @@ This app is the successor of the [PDF Annotation Extractor for Alfred](https://g
   brew install mgmeyers/pdfannots2json/pdfannots2json
   ```
 
-- Download the zip file, unzip it, and put it into you "Applications" Folder.
+- [Download the latest release](https://github.com/chrisgrieser/pdf-annotation-extractor/releases/latest) and drag the app it into your "Applications" Folder.
+- Download the latest release and drag the app into you ""
 - Run the following code in your terminal: 
 
   ```bash
